@@ -1,6 +1,6 @@
 {
   "name": "snaplogger",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A snap per time logger! And notifier! Or snap hooker! Make snap to be taken at interval! And take action on! Can be used for snap logging! Or notifying! Or Snap action!",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -38,5 +38,11 @@
     "url": "https://github.com/Glitnirian/SnapLogger/issues"
   },
   "homepage": "https://github.com/Glitnirian/SnapLogger#readme",
-  "keywords": ["Snap", "logger", "Snapshot", "interval", "Notification"]
+  "keywords": [
+    "Snap",
+    "logger",
+    "Snapshot",
+    "interval",
+    "Notification"
+  ]
 }
