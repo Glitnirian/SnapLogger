@@ -37,5 +37,6 @@
   "bugs": {
     "url": "https://github.com/Glitnirian/SnapLogger/issues"
   },
-  "homepage": "https://github.com/Glitnirian/SnapLogger#readme"
+  "homepage": "https://github.com/Glitnirian/SnapLogger#readme",
+  "keywords": ["Snap", "logger", "Snapshot", "interval", "Notification"]
 }
