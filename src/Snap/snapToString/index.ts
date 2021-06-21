@@ -25,7 +25,7 @@ export function snapToStringDefaultMapBody({
 }: SnapToStringMapperData): string {
     let str = '';
     for (const [key, value] of snap.entries()) {
-        str += `${snapToStringDefaultOneEntry({ key, value })}\n`;
+        str += `${snapToStringDefaultOneEntry({ key, value })}\n\n`;
     }
     return str;
 }

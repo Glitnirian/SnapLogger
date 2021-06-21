@@ -6,7 +6,29 @@ Default snap string message is provided too! For a verbose snap representation!
 
 The helpers methods can be used separately to choose and customize the outcome!
 
+**To note the snap will log (process)**! Only when the snap is changed! And only when the timeout is reached! So if we change (set()) the snap! Nothing will happen till the timeout is reached! And the logging will happen (process)! If the timeout (interval)! Is reached but no change happen to the snap! No logging will happen!
+
 ## Signature
+
+### Construction
+
+```ts
+export interface IOptions {
+    intervalTime?: number;
+    snapToStringMapper?: SnapToStringMapper;
+    logger?: SnapLoggerHandler;
+}
+
+export declare type SnapToStringMapper = (data: SnapToStringMapperData) => string;
+
+
+export declare type SnapToStringMapperData = {
+    snap: Map<string, any>;
+    dateTime?: number;
+}
+
+export declare type SnapLoggerHandler = (snapStr: string) => void;
+```
 
 ### Properties
 
@@ -75,15 +97,28 @@ You may choose the second mode! When you don't need to keep the value of the sna
 Construction
 
 ```ts
-const stringBatchNotifier = getStringBatchNotifier({
-    notifSysOptions,
-    stringBatcherOptions
-});
-
 const snapLogger = new SnapLogger({
-    ...snapLoggerOptions,
+    intervalTime: 5 * 60e3,
+    // logging or processing
     logger: function snapLoggerLogger(message: string) {
+        // message here is the result of the snap to string mapping
         stringBatchNotifier(message);
+    },
+    // snap to string mapper (return string from a snap)
+    snapToStringMapper: function notifSnapLoggerToStringMapper(data) {
+        const {
+            snap,
+            dateTime
+        } = data;
+
+        const candle: ICandle = snap.get('candle');
+        const candleOpenTime: any = candle?.openTime;
+
+        // return String constructed from the snap!
+        return `${`\n\n Bot snap [Time: ${candleOpenTime ? new Date(candleOpenTime).toUTCString() : '\\'}] [Now: ${new Date(dateTime).toUTCString()}]:\n`
+            + '=============================================================================\n'}${
+            // one of the snapToString helpers
+            snapToStringDefaultMapBody(data)}`;
     }
 });
 ```
@@ -91,8 +126,71 @@ const snapLogger = new SnapLogger({
 Usage:
 
 ```ts
+// __________ setting the snap
+
+bot.on('beforeCandleProcess', ({
+    candle
+}) => {
+    // settings a snap value
+    telegramSnapBeatNotifier.snapLogger.set('candle', getHumanReadableCandle({ candle }));
+});
+
+bot.on('buySessionFinished', (finishData) => {
+    // settings a snap value
+    telegramSnapBeatNotifier.snapLogger.set('buySessionFinished', finishData);
+});
+
+// __________________ Starting the snap logger
+/*
+The snap logger will start counting check timeout! (interval)! And processing
+*/
+telegramSnapBeatNotifier.snapLogger.start();
+```
+
+Snap to string mapping and helpers
+
+```ts
+`${`\n\n Bot snap [Time: ${candleOpenTime ? new Date(candleOpenTime).toUTCString() : '\\'}] [Now: ${new Date(dateTime).toUTCString()}]:\n`
++ '=============================================================================\n'}${
+// one of the snapToString helpers
+snapToStringDefaultMapBody(data)}`
+```
+
+Will output:
 
 ```
+Bot snap [Time: Mon, 19 Jan 1970 19:11:15 GMT] [Now: Mon, 21 Jun 2021 11:31:13 GMT]:
+=============================================================================
+candle:
+=====
+{
+    "pair": "EURUSD",
+    "interval": 300,
+    "openTime": "Mon, 19 Jan 1970 19:11:15 GMT",
+    "closeTime": "Mon, 19 Jan 1970 19:11:15 GMT",
+    "open": 1.18939,
+    "close": 1.18959,
+    "high": 1.18959,
+    "low": 1.18931,
+    "volume": 118
+}
+
+buySessionFinished:
+=====
+{
+    "order": {
+        "id": 1247438523,
+        "pair": "EURUSD",
+        "type": "sell",
+        "amount": 104.03858217990258
+    },
+    sessionInfo: {
+        profit: 10
+    }
+}
+```
+
+You can see how `snapToStringDefaultMapBody(data)` helper help output the snap!
 
 ## Snap class
 
