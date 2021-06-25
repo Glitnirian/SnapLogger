@@ -1,6 +1,6 @@
 {
   "name": "snaplogger",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A snap per time logger! And notifier! Or snap hooker! Make snap to be taken at interval! And take action on! Can be used for snap logging! Or notifying! Or Snap action!",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
