@@ -2,7 +2,10 @@
 
 A snap per time logger! And notifier! Or snap hooker! Make snap to be taken at interval! And take action on! Can be used for snap logging! Or notifying! Or Snap action!
 
-Default snap string message is provided too! For a verbose snap representation!
+That you want to log to console at interval! Or to a telegram group! Or any other system! Taking a snapshot of a state of elements each time and have it processed and logged! SnapLogger is all about this!
+You set the snap values! As the program is running! Then automatically when the snap change and the interval period is reached a logging (processing) takes place! A snapLogger (or snap Processor)!
+
+For snap output and string representation! Default snap string message helpers are provided too! For a verbose snap representation! To be used within the snapToString mapper!
 
 The helpers methods can be used separately to choose and customize the outcome!
 
@@ -100,9 +103,13 @@ Construction
 const snapLogger = new SnapLogger({
     intervalTime: 5 * 60e3,
     // logging or processing
-    logger: function snapLoggerLogger(message: string) {
+    logger: async function snapLoggerLogger(message: string) {
         // message here is the result of the snap to string mapping
-        stringBatchNotifier(message);
+
+        // Processing go 
+
+        await stringBatchNotifier(message);
+        // here: Sending notification to a telegram group or some logging system (You may like to check the StringBatcher package too)
     },
     // snap to string mapper (return string from a snap)
     snapToStringMapper: function notifSnapLoggerToStringMapper(data) {
